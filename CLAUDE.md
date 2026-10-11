@@ -3,14 +3,15 @@
 Bilingual (Armenian / English) archive of the Fedayi era, moved off Base44 to a
 plain static site. React 18 + Vite + Tailwind 3, deployed on Netlify from GitHub.
 
-## Site mode: under construction
+## Site mode
 
-- `UNDER_CONSTRUCTION` in `src/lib/siteMode.js` is `true`: every address shows
-  the coming-soon page (`src/pages/ComingSoon.jsx`) — the original Potoreek
-  film on loop, a launch sign-up (Netlify form `newsletter`) and social links.
-- Preview the full site with `?preview=on` on any URL (remembered in that
-  browser); `?preview=off` returns to the landing page. Not a password.
-- To launch: set `UNDER_CONSTRUCTION = false`, build, push.
+- The full site is live (launched 2026-10-12): `UNDER_CONSTRUCTION` in
+  `src/lib/siteMode.js` is `false`.
+- Setting it to `true` again shows the coming-soon page
+  (`src/pages/ComingSoon.jsx`) at every address — the original Potoreek film on
+  loop, a launch sign-up (Netlify form `newsletter`) and social links. While on,
+  `?preview=on` on any URL shows the full site in that browser (`?preview=off`
+  undoes it). Not a password.
 - Videos live in `public/video/`: `potoreek-*` is the full original film
   (landing page), `intro-*` is the homepage opening film, trimmed at 9.6 s
   before the Patreon card with a fade out. 1080p for wide screens, 720p for

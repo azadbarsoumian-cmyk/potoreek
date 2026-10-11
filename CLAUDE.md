@@ -18,10 +18,18 @@ plain static site. React 18 + Vite + Tailwind 3, deployed on Netlify from GitHub
   before the Patreon card with a fade out. 1080p for wide screens, 720p for
   phones (`src/lib/video.js`). The raw source and FFmpeg scratch files stay in
   `.video-work/` (git-ignored); FFmpeg is installed via winget (Gyan.FFmpeg).
-- The film's own audio track was silent. Its soundtrack is synthesized by
-  `scripts/soundtrack/duduk-soundtrack.mjs` (duduk melody + dam drone, wind,
-  thunder, cued to the film's titles) and muxed in with `-c:v copy`
-  (landing: full length, -3 dB; intro: first 9.6 s with a fade).
+- The film's own audio track was silent. Current soundtrack: "Spirit Of War"
+  by _Music_for_Creators_ (Pixabay, Pixabay Content License — free, no credit
+  required, no standalone redistribution:
+  https://pixabay.com/music/main-title-spirit-of-war-127129/). Excerpt
+  108.9–123.86 s, so its big hit (114.1 s) lands on the logo bloom at 5.2 s;
+  fade in 0.25 s, fade out from 13.6 s for the loop. Under it, a wind/thunder
+  bed from `scripts/soundtrack/duduk-soundtrack.mjs ... nature` at 0.32.
+  The MP3 stays in `.video-work/music/` and must not be committed.
+- `scripts/soundtrack/duduk-soundtrack.mjs` with no stem argument renders the
+  earlier fully synthesized duduk soundtrack (kept as a fallback).
+- Soundtracks are muxed in with `-c:v copy` (landing: full length; intro: first
+  9.6 s with a 0.8 s fade).
 
 ## How it fits together
 

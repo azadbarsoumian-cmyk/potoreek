@@ -2,7 +2,9 @@
 // dam (drone), with mountain wind and distant thunder, timed to the film.
 // Everything is synthesized here, so there is nothing to license.
 //
-// Usage: node scripts/soundtrack/duduk-soundtrack.mjs <out.wav> [seconds]
+// Usage: node scripts/soundtrack/duduk-soundtrack.mjs <out.wav> [seconds] [stem]
+//   stem "all" (default): synthesized duduk + dam + wind + thunder
+//   stem "nature": wind and thunder only, as a bed under recorded music
 //
 // Film cues (seconds): WWW.POTOREEK.COM lands 1.8 · red logo blooms 5.2 ·
 // tagline words 5.8 / 6.3 / 6.8 / 7.4 · Patreon card 9.9 · end 14.96 (loops).
@@ -12,6 +14,7 @@ import { writeFileSync } from "node:fs";
 const SR = 48000;
 const out = process.argv[2];
 const DUR = Number(process.argv[3] || 14.96);
+const STEM = process.argv[4] || "all";
 if (!out) {
   console.error("Usage: node scripts/soundtrack/duduk-soundtrack.mjs <out.wav> [seconds]");
   process.exit(1);
@@ -235,7 +238,15 @@ function thunder(seed, at, strength) {
 }
 
 const windL = wind(21), windR = wind(22);
-const thunders = [thunder(31, 1.7, 0.55), thunder(32, 5.05, 0.9), thunder(33, 11.6, 0.35)];
+// Under recorded music the logo moment belongs to the music's own hit, so the
+// nature bed keeps only the URL-landing and closing thunder.
+const thunders = STEM === "nature"
+  ? [thunder(31, 1.7, 0.6), new Float32Array(N), thunder(33, 11.6, 0.3)]
+  : [thunder(31, 1.7, 0.55), thunder(32, 5.05, 0.9), thunder(33, 11.6, 0.35)];
+if (STEM === "nature") {
+  melody.fill(0);
+  dam.fill(0);
+}
 
 // ---------- reverb (small Freeverb) ----------
 function reverb(input, offset) {

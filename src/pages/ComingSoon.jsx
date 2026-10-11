@@ -64,9 +64,12 @@ export default function ComingSoon() {
           type="button"
           onClick={() => setMuted((m) => !m)}
           aria-label={muted ? "Միացնել ձայնը · Turn sound on" : "Անջատել ձայնը · Turn sound off"}
-          className="absolute top-4 right-4 w-11 h-11 flex items-center justify-center text-white/80 border border-white/25 bg-black/40 hover:text-white hover:border-white/60"
+          className="absolute top-4 right-4 h-11 px-4 flex items-center gap-2 text-white/85 border border-white/25 bg-black/40 hover:text-white hover:border-white/60"
         >
           {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          <span className="font-mono text-[11px] uppercase tracking-widest" aria-hidden="true">
+            {muted ? "Ձայն · Sound" : "Լռել · Mute"}
+          </span>
         </button>
       </div>
 

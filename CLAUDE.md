@@ -18,6 +18,10 @@ plain static site. React 18 + Vite + Tailwind 3, deployed on Netlify from GitHub
   before the Patreon card with a fade out. 1080p for wide screens, 720p for
   phones (`src/lib/video.js`). The raw source and FFmpeg scratch files stay in
   `.video-work/` (git-ignored); FFmpeg is installed via winget (Gyan.FFmpeg).
+- The film's own audio track was silent. Its soundtrack is synthesized by
+  `scripts/soundtrack/duduk-soundtrack.mjs` (duduk melody + dam drone, wind,
+  thunder, cued to the film's titles) and muxed in with `-c:v copy`
+  (landing: full length, -3 dB; intro: first 9.6 s with a fade).
 
 ## How it fits together
 

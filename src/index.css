@@ -67,6 +67,17 @@
   }
 }
 
+/* Homepage opening film: fill wide screens; on tall phone screens show the
+   whole frame so the film's own titles aren't cropped off. */
+.intro-film {
+  object-fit: cover;
+}
+@media (orientation: portrait) {
+  .intro-film {
+    object-fit: contain;
+  }
+}
+
 /* Homepage storm intro */
 .storm-kenburns {
   animation: stormKenburns 24s ease-in-out infinite alternate;

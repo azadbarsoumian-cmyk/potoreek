@@ -28,3 +28,7 @@ Thumbs.db
 
 # raw Base44 export (the site reads public/data instead)
 potorik-base44-data/
+
+# unprocessed source videos (only the web-ready encodes are committed)
+public/video/raw-*
+.video-work/

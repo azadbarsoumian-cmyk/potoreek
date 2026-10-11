@@ -1,4 +1,6 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useState } from 'react';
+import ComingSoon from '@/pages/ComingSoon';
+import { showComingSoon } from '@/lib/siteMode';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ScrollToTop from './components/ScrollToTop';
 import Layout from '@/components/layout/Layout';
@@ -19,6 +21,9 @@ import NotFound from '@/pages/NotFound';
 const ArchiveMap = lazy(() => import('@/pages/ArchiveMap'));
 
 function App() {
+  const [comingSoon] = useState(showComingSoon);
+  if (comingSoon) return <ComingSoon />;
+
   return (
     <Router>
       <ScrollToTop />

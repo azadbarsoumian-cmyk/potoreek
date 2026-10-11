@@ -1,17 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { RotateCcw } from "lucide-react";
+import { RotateCcw, Volume2, VolumeX } from "lucide-react";
 import { content } from "@/api/content";
 import { useLanguage } from "@/lib/LanguageContext";
 import { ARCHIVE_CATEGORIES } from "@/lib/taxonomy";
+import { pickVideo } from "@/lib/video";
 
-// Homepage intro: the Փոթորիկ storm pulls the archive into a whirlwind,
-// then lays every fragment down in its category.
-//
-// To use an AI-generated background clip, put it in public/video/ and set
-// HERO_VIDEO (e.g. "/video/hero.mp4"). Until then the still photo is used.
-const HERO_VIDEO = null;
+// Homepage intro, in two acts:
+// 1. The opening film (the Potoreek promo, cut before its Patreon card)
+//    plays and ends on the logo.
+// 2. The Փոթորիկ storm takes over from the logo, pulls the archive into a
+//    whirlwind, then lays every fragment down in its category.
+// Set INTRO_FILM to null to start straight from the storm.
+const INTRO_FILM = {
+  hd: "/video/intro-1080.mp4",
+  sd: "/video/intro-720.mp4", // phones and data-saver connections
+  poster: "/video/intro-poster.jpg",
+};
 const HERO_POSTER = "/images/9d85d5882_generated_7226d19c.jpg";
+const FILM_START_TIMEOUT = 4000; // give up on the film if it hasn't started by then
 
 // Loose fragments that swirl in the storm and fade once order returns.
 const DEBRIS = ["1890", "1895", "1897", "1904", "1905", "1915", "1918", "1920", "Սասուն", "Վան", "Զէյթուն", "Խանասոր", "Մուշ", "Կարս"];
@@ -76,12 +83,17 @@ function stageCenter(stage) {
 
 export default function StormIntro() {
   const { lang } = useLanguage();
-  const [run, setRun] = useState(() => (shouldSkipIntro() ? 0 : 1));
-  const [phase, setPhase] = useState(() => (run > 0 ? "calm" : "done"));
+  const [skipAtStart] = useState(shouldSkipIntro);
+  const [run, setRun] = useState(skipAtStart || INTRO_FILM ? 0 : 1);
+  const [phase, setPhase] = useState(skipAtStart ? "done" : INTRO_FILM ? "film" : "calm");
+  const [filmFading, setFilmFading] = useState(false);
+  const [muted, setMuted] = useState(true);
   const [tiles, setTiles] = useState(() => ARCHIVE_CATEGORIES.map((c) => ({ ...c, count: null, image: null })));
 
   const stageRef = useRef(null);
   const logoRef = useRef(null);
+  const filmRef = useRef(null);
+  const filmEndedRef = useRef(false);
   const tileRefs = useRef([]);
   const debrisRefs = useRef([]);
   const rafRef = useRef(0);
@@ -122,9 +134,36 @@ export default function StormIntro() {
   const finish = () => {
     clearTimers();
     resetInlineStyles();
+    filmEndedRef.current = true;
+    setFilmFading(false);
     setPhase("done");
     markSeen();
   };
+
+  // Act 1 → act 2: fade the film out while the storm starts underneath it.
+  const endFilm = () => {
+    if (filmEndedRef.current) return;
+    filmEndedRef.current = true;
+    setFilmFading(true);
+    setPhase("calm");
+    setRun((r) => r + 1);
+    setTimeout(() => setFilmFading(false), 900);
+  };
+
+  useEffect(() => {
+    if (phase !== "film") return undefined;
+    filmEndedRef.current = false;
+    const film = filmRef.current;
+    if (!film) return undefined;
+    film.currentTime = 0;
+    film.muted = muted;
+    film.play().catch(endFilm);
+    // Slow connection or blocked autoplay: don't keep visitors waiting.
+    const giveUp = setTimeout(() => {
+      if (film.paused || film.currentTime === 0) endFilm();
+    }, FILM_START_TIMEOUT);
+    return () => clearTimeout(giveUp);
+  }, [phase]);
 
   // The storm: everything orbits the logo, then settles into the grid.
   useEffect(() => {
@@ -202,34 +241,33 @@ export default function StormIntro() {
 
   const replay = () => {
     resetInlineStyles();
-    setPhase("calm");
-    setRun((r) => r + 1);
+    if (INTRO_FILM) {
+      setPhase("film");
+    } else {
+      setPhase("calm");
+      setRun((r) => r + 1);
+    }
+  };
+
+  const toggleSound = (e) => {
+    e.stopPropagation();
+    const next = !muted;
+    setMuted(next);
+    if (filmRef.current) filmRef.current.muted = next;
   };
 
   const animating = phase !== "done";
+  const showFilm = INTRO_FILM && (phase === "film" || filmFading);
   const L = (am, en) => (lang === "am" ? am : en);
 
   return (
     <section
       ref={stageRef}
       className="relative overflow-hidden bg-vitrine text-white min-h-[calc(100svh-4.5rem)] flex flex-col"
-      onClick={animating ? finish : undefined}
+      onClick={animating && phase !== "film" ? finish : undefined}
     >
-      {/* Backdrop: AI clip if provided, otherwise the still photo, plus mountain ridges and fog */}
-      {HERO_VIDEO ? (
-        <video
-          className="absolute inset-0 w-full h-full object-cover opacity-45"
-          src={HERO_VIDEO}
-          poster={HERO_POSTER}
-          autoPlay
-          muted
-          loop
-          playsInline
-          aria-hidden="true"
-        />
-      ) : (
-        <img src={HERO_POSTER} alt="" aria-hidden="true" className="storm-kenburns absolute inset-0 w-full h-full object-cover opacity-30" />
-      )}
+      {/* Backdrop: the still photo with drifting mountain ridges and fog */}
+      <img src={HERO_POSTER} alt="" aria-hidden="true" className="storm-kenburns absolute inset-0 w-full h-full object-cover opacity-30" />
       <svg className="storm-ridges absolute bottom-0 left-0 h-[45%] w-[200%]" viewBox="0 0 2400 400" preserveAspectRatio="none" aria-hidden="true">
         <path d="M0 260 L120 190 L230 240 L380 120 L520 230 L640 170 L780 250 L900 140 L1060 230 L1200 260 L1320 190 L1430 240 L1580 120 L1720 230 L1840 170 L1980 250 L2100 140 L2260 230 L2400 260 L2400 400 L0 400 Z" fill="#2a2321" opacity="0.55" />
         <path d="M0 310 L160 250 L300 300 L420 230 L600 310 L760 260 L900 320 L1040 250 L1200 310 L1360 250 L1500 300 L1620 230 L1800 310 L1960 260 L2100 320 L2240 250 L2400 310 L2400 400 L0 400 Z" fill="#1c1716" opacity="0.8" />
@@ -275,7 +313,7 @@ export default function StormIntro() {
               ref={(el) => (tileRefs.current[i] = el)}
               to={c.en === "Poems" ? "/poems" : `/stories?category=${encodeURIComponent(c.en)}`}
               className={`group relative h-24 md:h-28 overflow-hidden border border-white/15 bg-black/50 text-left transition-[opacity,border-color] duration-700 hover:border-[#C1272D] focus-visible:border-[#C1272D] ${
-                phase === "calm" ? "opacity-0" : "opacity-100"
+                phase === "calm" || phase === "film" ? "opacity-0" : "opacity-100"
               }`}
             >
               {c.image && (
@@ -312,6 +350,34 @@ export default function StormIntro() {
         </div>
       </div>
 
+      {/* Act 1: the opening film, over the top of the stage */}
+      {showFilm && (
+        <div
+          className={`absolute inset-0 z-30 bg-black transition-opacity duration-700 ${filmFading ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+        >
+          <video
+            ref={filmRef}
+            className="intro-film block w-full h-[calc(100svh-4.5rem)]"
+            src={pickVideo(INTRO_FILM)}
+            poster={INTRO_FILM.poster}
+            muted
+            playsInline
+            preload="auto"
+            onEnded={endFilm}
+            onError={endFilm}
+            aria-label={L("Փոթորիկ ներածական տեսանիւթ", "Potoreek opening film")}
+          />
+          <button
+            type="button"
+            onClick={toggleSound}
+            aria-label={muted ? L("Միացնել ձայնը", "Turn sound on") : L("Անջատել ձայնը", "Turn sound off")}
+            className="absolute z-40 bottom-4 left-4 w-11 h-11 flex items-center justify-center text-white/80 border border-white/25 bg-black/40 hover:text-white hover:border-white/60"
+          >
+            {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          </button>
+        </div>
+      )}
+
       {animating ? (
         <button
           type="button"
@@ -319,7 +385,7 @@ export default function StormIntro() {
             e.stopPropagation();
             finish();
           }}
-          className="absolute z-20 bottom-4 right-4 min-h-[44px] px-4 font-mono text-[11px] uppercase tracking-widest text-white/70 border border-white/20 bg-black/40 hover:text-white hover:border-white/50"
+          className="absolute z-40 bottom-4 right-4 min-h-[44px] px-4 font-mono text-[11px] uppercase tracking-widest text-white/70 border border-white/20 bg-black/40 hover:text-white hover:border-white/50"
         >
           {L("Բաց թողնել", "Skip intro")}
         </button>

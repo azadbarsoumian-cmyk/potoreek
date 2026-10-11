@@ -12,8 +12,10 @@ npm run dev
 
 ## Publish
 
-The site is hosted on Netlify. Every push to the `main` branch on GitHub builds
-and publishes it automatically (`netlify.toml` holds the settings).
+The site is hosted on Netlify at https://potoreek.netlify.app. Build it with
+`npm run build`, then publish the `dist/` folder with
+`npx netlify-cli deploy --prod --dir dist --no-build` (`netlify.toml` holds the
+settings).
 
 ## Content
 

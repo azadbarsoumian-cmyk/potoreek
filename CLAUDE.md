@@ -31,13 +31,18 @@ plain static site. React 18 + Vite + Tailwind 3, deployed on Netlify from GitHub
 
 ## Publishing
 
-- Live site: https://potoreek.netlify.app (Netlify project `potoreek`, team slug
-  `azadbarsoumian-cmyk`). This folder is linked to it via `.netlify/state.json`.
-- The site is NOT connected to GitHub for automatic deploys. To publish: run
-  `npm run build`, then in the user's Terminal panel (where the Netlify login is
-  stored) run `npx -y netlify-cli@27.12.0 deploy --prod --dir dist --no-build`.
-  Each production deploy uses Netlify credits (free plan: 300/month), so batch
-  changes into one publish.
-- Also commit and push to GitHub (`origin`, branch `main`) to keep the history.
-- New Netlify sites start private ("Netlify login required"); this one was
+- Live site: https://potoreek.com (bought through Netlify; Netlify DNS + HTTPS).
+  Netlify project `idyllic-begonia-79b895`, id `455724da-18cb-4024-95c5-e78b009a2823`,
+  team slug `azadbarsoumian-cmyk`. This folder is linked to it via `.netlify/state.json`.
+- Publishing = push to GitHub: the project builds `main` from
+  `azadbarsoumian-cmyk/potoreek` automatically. Run `npm run build` locally
+  first to catch errors, then commit and push.
+- Each production deploy uses Netlify credits (free plan: 300/month), so batch
+  changes into one push. Put `[skip netlify]` in the commit message for
+  changes that don't affect the site (docs only).
+- Netlify CLI commands need the user's login, which only works in the user's
+  Terminal panel: `npx -y netlify-cli@27.12.0 <command>`.
+- New Netlify projects start private ("Netlify login required"); this one was
   switched to public (`sso_login: false`) and has form detection on.
+- A second, older project `potoreek` (https://potoreek.netlify.app) was a manual
+  upload and no longer updates; it can be deleted in the Netlify dashboard.

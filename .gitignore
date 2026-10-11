@@ -1,0 +1,30 @@
+# dependencies and build output
+node_modules
+dist
+dist-ssr
+.vite
+*.local
+
+# environment files (never commit secrets)
+.env
+.env.*
+
+# logs
+*.log
+npm-debug.log*
+
+# editors and OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+Thumbs.db
+
+# Netlify CLI state
+.netlify
+
+# local Claude preview config (machine-specific paths)
+.claude/
+
+# raw Base44 export (the site reads public/data instead)
+potorik-base44-data/

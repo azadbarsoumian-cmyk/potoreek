@@ -19,6 +19,11 @@ plain static site. React 18 + Vite + Tailwind 3, deployed on Netlify from GitHub
   still linked from Blogger (`blogger.googleusercontent.com`).
 - Forms (pre-order, newsletter) post to Netlify Forms via `src/lib/forms.js`.
   A new form also needs a hidden copy in `index.html`.
+- The homepage opens with an animated intro (`src/components/home/StormIntro.jsx`):
+  the archive swirls around the logo, then settles into the 12 category tiles.
+  It plays once per browser session (skippable, replay button, off for
+  reduced-motion). To use an AI-generated background clip, add it under
+  `public/video/` and set `HERO_VIDEO` in that file.
 - The hologram (`src/components/shared/HoloPortrait.jsx`) loads photos through
   the public wsrv.nl relay when the photo host blocks WebGL.
 - `scripts/import-base44-export.mjs` was the one-off migration from the Base44

@@ -42,6 +42,25 @@ export function createGitHub(token) {
   }
 
   return {
+    // Team: people with write access to the site repo (= full Command Center access).
+    // Inviting and removing needs the key's "Administration: Read and write" permission.
+    async team() {
+      const [people, invites] = await Promise.all([
+        request(`${repoPath}/collaborators?per_page=100`),
+        request(`${repoPath}/invitations?per_page=100`).catch(() => []),
+      ]);
+      return { people, invites };
+    },
+    async invite(username) {
+      return request(`${repoPath}/collaborators/${encodeURIComponent(username)}`, { method: "PUT", body: { permission: "push" } });
+    },
+    async removeMember(username) {
+      return request(`${repoPath}/collaborators/${encodeURIComponent(username)}`, { method: "DELETE" });
+    },
+    async cancelInvite(id) {
+      return request(`${repoPath}/invitations/${id}`, { method: "DELETE" });
+    },
+
     // Who is signed in, and can they push to the site repo?
     async verify() {
       const repo = await request(repoPath);

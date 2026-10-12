@@ -7,6 +7,8 @@ const KIND = {
   add: { label: "New", cls: "cc-stamp-ink" },
   edit: { label: "Amend", cls: "cc-stamp-ink" },
   delete: { label: "Remove", cls: "" },
+  publish: { label: "Online", cls: "cc-stamp-green" },
+  hide: { label: "Hide", cls: "" },
   upload: { label: "Upload", cls: "cc-stamp-green" },
   settings: { label: "Settings", cls: "cc-stamp-green" },
 };

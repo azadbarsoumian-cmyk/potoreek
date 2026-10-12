@@ -32,3 +32,9 @@ potorik-base44-data/
 # unprocessed source videos (only the web-ready encodes are committed)
 public/video/raw-*
 .video-work/
+
+# archive reorganization workspace (agent output is reviewed, then applied to content/)
+reorg/
+
+# generated from content/ by scripts/build-data.mjs
+public/data/

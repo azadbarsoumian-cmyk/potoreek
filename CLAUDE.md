@@ -5,14 +5,15 @@ plain static site. React 18 + Vite + Tailwind 3, deployed on Netlify from GitHub
 
 ## Site mode
 
-- Coming-soon mode is ON (`UNDER_CONSTRUCTION = true` in `src/lib/siteMode.js`;
-  briefly launched on 2026-10-12, then switched back at the user's request).
+- Coming-soon mode is ON (`"underConstruction": true` in `src/config/site.json`,
+  read by `src/lib/siteMode.js`; briefly launched on 2026-10-12, then switched
+  back at the user's request). The Command Center's Settings room flips it.
   Every address shows the coming-soon page (`src/pages/ComingSoon.jsx`) — the
   original Potoreek film on loop, a launch sign-up (Netlify form `newsletter`)
   and social links.
 - While on, `?preview=on` on any URL shows the full site in that browser
   (`?preview=off` undoes it). Not a password.
-- To launch: set `UNDER_CONSTRUCTION = false`, build, push.
+- To launch: set `underConstruction` to `false`, build, push.
 - Videos live in `public/video/`: `potoreek-*` is the full original film
   (landing page), `intro-*` is the homepage opening film, trimmed at 9.6 s
   before the Patreon card with a fade out. 1080p for wide screens, 720p for
@@ -49,19 +50,52 @@ plain static site. React 18 + Vite + Tailwind 3, deployed on Netlify from GitHub
   Netlify token), Settings (`src/config/site.json`, `src/config/taxonomy.json`).
 - Index files are written one record per line (`format.js` `serializeRows`);
   keep that format when editing them by hand or by script.
+- Online / hidden: every collection room filters by visibility and has bulk
+  "Put online" / "Hide" (record-level `patches` orders). New and imported
+  records start hidden. Prefer hiding over deleting.
+
+## Fedayi registry and Studio
+
+- `content/fidayis.json` (index: names, aliases, years, region key from
+  `src/lib/regions.js`, roles, portrait, `story_ids` / `quote_ids` /
+  `poem_ids`) plus `content/fidayis/<id>.json` (bio, places, timeline, gallery,
+  sources, card/model/merch links). Public pages: `/fidayis` and
+  `/fidayi/<slug>` (`src/pages/Fidayis.jsx`, `FidayiDetail.jsx`).
+- Story editor → "People in this story": link existing fedayi or "Recognize a
+  new fedayi", which opens a new fedayi prefilled from the story (Armenian name,
+  transliterated English name and slug via `collections.js` `transliterate`,
+  portrait, region, summary as draft bio). The fedayi editor's Archive collector
+  searches stories, quotes and poems by name and aliases.
+- Studio (`src/admin/studio/`, all in the browser, no paid services): one press
+  makes a trading card front/back (750×1050), A3 poster, social images, print
+  files (T-shirt 3000×3600 transparent, sticker, 11 oz mug wrap), mockups and a
+  3D portrait relief (three.js heightmap → GLB for the page, closed 100 mm STL
+  for printing), zipped with JSZip. "Add to the page & shop" stages the files
+  under `public/images/fidayis/<slug>/`, links them on the record and adds
+  hidden products with `fidayi_id`. Remote portraits load through wsrv.nl.
+  The 3D model is a relief of the photo, not a full figure.
 
 ## How it fits together
 
-- Content lives in `public/data/` as JSON. `src/api/content.js` loads it and
-  offers `content.Story.list / filter / get / aggregate` (same shape the pages
+- `content/` is the editable archive and the source of truth (the Command
+  Center writes there). `scripts/build-data.mjs` (runs before `dev` and
+  `build`) copies only `published: true` records into `public/data/`
+  (generated, git-ignored), drops admin-only fields (`published`, `notes`),
+  adds `fidayis` chips to story details and keeps fedayi links to published
+  records only. Hidden records never reach the site's files — but the GitHub
+  repository itself is public, so keep it private if hidden drafts matter.
+- `src/api/content.js` loads `/data/*.json` and offers
+  `content.Story.list / filter / get / findBy / aggregate` (same shape the pages
   used with Base44).
-  - `stories.json` and `blog-posts.json` are light indexes (no body text);
-    the full record with the body is `stories/<id>.json` / `blog-posts/<id>.json`.
+  - `stories.json`, `blog-posts.json` and `fidayis.json` are light indexes;
+    the full record is `stories/<id>.json`, `blog-posts/<id>.json`,
+    `fidayis/<id>.json`.
   - `poems.json`, `quotes.json`, `products.json`, `videos.json`, `news.json`
     hold complete records.
-- To add or edit content, edit those JSON files. A new record needs a unique
-  24-character lowercase hex `id` and a `created_date` (ISO timestamp); for a
-  story or blog post, add it to the index file and write its detail file too.
+- To add or edit content by hand, edit `content/`. A new record needs a unique
+  24-character lowercase hex `id`, a `created_date` (ISO timestamp) and
+  `published`; for a story, blog post or fedayi, add it to the index file and
+  write its detail file too.
 - Images on Base44's servers were copied to `public/images/`. Story photos are
   still linked from Blogger (`blogger.googleusercontent.com`).
 - Forms (pre-order, newsletter) post to Netlify Forms via `src/lib/forms.js`.
@@ -78,8 +112,9 @@ plain static site. React 18 + Vite + Tailwind 3, deployed on Netlify from GitHub
 
 ## Commands
 
-- `npm run dev` — local dev server
-- `npm run build` — production build into `dist/`
+- `npm run dev` — regenerate `public/data/`, then the local dev server
+- `npm run build` — regenerate `public/data/`, then the production build into `dist/`
+- `npm run data` — only regenerate `public/data/` from `content/`
 
 ## Publishing
 

@@ -1,27 +1,56 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ArrowLeft, ExternalLink, Trash2 } from "lucide-react";
 import { useCommand } from "./store";
-import { collectionByKey, missingFields } from "./collections";
+import { collectionByKey, missingFields, toSlug, transliterate, hasArmenian } from "./collections";
 import { Field } from "./fields";
+import { newId } from "./format";
 import { SITE_URL } from "./config";
+import { ArchiveCollector, StoryFidayiPanel } from "./FidayiTools";
+import StudioPanel from "./studio/StudioPanel";
+
+// A new fedayi recognized from a story starts with what the story knows.
+async function fromStory(getRecord, storyId) {
+  const s = await getRecord("stories", storyId);
+  if (!s) return {};
+  const strip = (t) => String(t || "").replace(/\s*[-–—:].*$/, "").trim();
+  // Untranslated English titles are still in Armenian script: suggest a transliteration.
+  const nameEn = hasArmenian(s.title_en) || !s.title_en ? transliterate(strip(s.title_am)) : strip(s.title_en);
+  // The story's summary is a first draft of the biography (some summaries are still in Armenian).
+  const excerpt = String(s.excerpt_en || "").trim().replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  return {
+    name_am: strip(s.title_am),
+    name_en: nameEn,
+    slug: toSlug(nameEn),
+    portrait_url: s.image_url,
+    region: s.region_en,
+    ...(excerpt ? { [hasArmenian(excerpt) ? "bio_am" : "bio_en"]: `<p>${excerpt}</p>` } : {}),
+    story_ids: [s.id],
+    notes: `Recognized from the story "${s.title_am}" (${s.title_en}).`,
+  };
+}
 
 export default function RecordEditor() {
   const { key, id } = useParams();
+  const [params] = useSearchParams();
   const col = collectionByKey(key);
   const isNew = id === "new";
   const navigate = useNavigate();
   const { getRecord, saveRecord, deleteRecord, loadCollection, demo } = useCommand();
-  const [record, setRecord] = useState(isNew ? {} : null);
+  const [record, setRecord] = useState(isNew ? { id: newId(), published: false } : null);
   const [original, setOriginal] = useState(null);
   const [errors, setErrors] = useState([]);
   const [missing, setMissing] = useState(false);
+  const [notice, setNotice] = useState("");
 
   useEffect(() => {
     if (!col) return;
     loadCollection(key);
     if (isNew) {
-      setRecord({});
+      const blank = { id: newId(), published: false };
+      setRecord(blank);
+      const storyId = params.get("fromStory");
+      if (key === "fidayis" && storyId) fromStory(getRecord, storyId).then((pre) => setRecord({ ...blank, ...pre }));
       return;
     }
     let alive = true;
@@ -50,6 +79,15 @@ export default function RecordEditor() {
     if (gaps.length) return;
     saveRecord(key, record);
     navigate(`/admin/c/${key}`);
+  };
+
+  // Studio results: merge into the record and seal it right away.
+  const applyStudio = (patch) => {
+    const next = { ...record, ...patch };
+    setRecord(next);
+    saveRecord(key, next);
+    setOriginal(JSON.stringify(next));
+    setNotice("Studio files are linked and this record is sealed. Dispatch from Orders to publish them.");
   };
 
   const remove = () => {
@@ -82,7 +120,16 @@ export default function RecordEditor() {
             {col.fields.map((f) => (
               <Field key={f.name || f.fields.en} field={f} record={record} onChange={setRecord} />
             ))}
+            {key === "stories" && <StoryFidayiPanel storyId={id} record={record} />}
+            {key === "fidayis" && <ArchiveCollector record={record} onChange={setRecord} />}
+            {key === "fidayis" && <StudioPanel record={record} onApply={applyStudio} />}
           </div>
+
+          {notice && (
+            <p className="mt-5 text-sm text-[#2f5a32]" role="status">
+              {notice}
+            </p>
+          )}
 
           {errors.length > 0 && (
             <p className="mt-5 text-sm text-[#a3161f]" role="alert">

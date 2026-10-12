@@ -7,6 +7,7 @@
 
 const COLLECTIONS = {
   Story: { file: "stories", detailDir: "stories" },
+  Fidayi: { file: "fidayis", detailDir: "fidayis" },
   BlogPost: { file: "blog-posts", detailDir: "blog-posts" },
   Poem: { file: "poems" },
   Quote: { file: "quotes" },
@@ -106,6 +107,11 @@ function collection(name) {
       const row = (await all()).find((r) => r.id === id);
       if (!row) throw new Error(`${name} not found`);
       return row;
+    },
+
+    async findBy(field, value) {
+      const row = (await all()).find((r) => r[field] === value);
+      return row ? this.get(row.id) : null;
     },
 
     async aggregate({ groupBy }) {

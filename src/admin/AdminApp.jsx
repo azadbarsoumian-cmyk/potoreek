@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, Route, Routes, Link } from "react-router-dom";
-import { Archive, BookOpen, Feather, Quote, ShoppingBag, Film, Newspaper, Image as ImageIcon, Mail, Settings as Cog, Radar, ExternalLink, LogOut, Stamp } from "lucide-react";
+import { Users, Archive, BookOpen, Feather, Quote, ShoppingBag, Film, Newspaper, Image as ImageIcon, Mail, Settings as Cog, Radar, ExternalLink, LogOut, Stamp } from "lucide-react";
 import "./admin.css";
 import { createGitHub } from "./github";
 import { CommandProvider, useCommand } from "./store";
@@ -81,6 +81,7 @@ export default function AdminApp() {
 const ROOMS = [
   { to: "/admin", end: true, icon: Radar, am: "Իրադրութիւն", en: "Situation room" },
   { to: "/admin/c/stories", icon: Archive, am: "Պատմութիւններ", en: "Archive stories" },
+  { to: "/admin/c/fidayis", icon: Users, am: "Ֆէտայիներ", en: "Fedayi registry" },
   { to: "/admin/c/blog", icon: BookOpen, am: "Բլոգ", en: "Blog" },
   { to: "/admin/c/poems", icon: Feather, am: "Բանաստեղծութիւններ", en: "Poems" },
   { to: "/admin/c/quotes", icon: Quote, am: "Քաղուածքներ", en: "Quotes" },

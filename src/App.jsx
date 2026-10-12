@@ -16,6 +16,8 @@ import Contact from '@/pages/Contact';
 import Poems from '@/pages/Poems';
 import Quotes from '@/pages/Quotes';
 import NotFound from '@/pages/NotFound';
+const Fidayis = lazy(() => import('@/pages/Fidayis'));
+const FidayiDetail = lazy(() => import('@/pages/FidayiDetail'));
 
 // The map page pulls in Leaflet, so it loads only when visited.
 const ArchiveMap = lazy(() => import('@/pages/ArchiveMap'));
@@ -50,6 +52,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/stories" element={<Stories />} />
           <Route path="/stories/:id" element={<StoryDetail />} />
+          <Route path="/fidayis" element={<Suspense fallback={null}><Fidayis /></Suspense>} />
+          <Route path="/fidayi/:slug" element={<Suspense fallback={null}><FidayiDetail /></Suspense>} />
           <Route path="/map" element={<Suspense fallback={null}><ArchiveMap /></Suspense>} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/videos" element={<Videos />} />

@@ -1,9 +1,12 @@
 // Command Center state: what is loaded from GitHub, the orders (edits) waiting
 // to be dispatched, and the dispatch itself (one commit for everything).
 //
-// Edits are kept as record-level operations, not whole files. At dispatch the
-// latest files are re-read from GitHub and the operations replayed on top, so
-// changes made elsewhere in the meantime are not overwritten.
+// Edits are kept as record-level operations, not whole files:
+//   upserts  — full records saved from the editor (or imported)
+//   patches  — a few fields changed on records not opened (e.g. bulk publish)
+//   deletes  — records to remove
+// At dispatch the latest files are re-read from GitHub and the operations
+// replayed on top, so changes made elsewhere in the meantime are kept.
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import siteConfig from "@/config/site.json";
 import taxonomyConfig from "@/config/taxonomy.json";
@@ -15,14 +18,20 @@ const ORDERS_KEY = "potoreek-cc-orders";
 const Ctx = createContext(null);
 export const useCommand = () => useContext(Ctx);
 
-// Read-only demo source: the files the running site already serves.
+const emptyOp = () => ({ upserts: {}, patches: {}, deletes: [] });
+const isEmptyOp = (op) => !Object.keys(op.upserts).length && !Object.keys(op.patches).length && !op.deletes.length;
+
+// Read-only demo source: the published files the running site already serves.
 const BUNDLED = { "src/config/site.json": siteConfig, "src/config/taxonomy.json": taxonomyConfig };
 const demoSource = {
   async readJson(path) {
     if (BUNDLED[path]) return structuredClone(BUNDLED[path]);
-    if (!path.startsWith("public/")) return null;
-    const res = await fetch(`/${path.slice("public/".length)}?t=${Date.now()}`);
-    return res.ok ? res.json() : null;
+    if (!path.startsWith("content/")) return null;
+    const res = await fetch(`/data/${path.slice("content/".length)}?t=${Date.now()}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    const mark = (r) => ({ ...r, published: true }); // the site only serves published records
+    return Array.isArray(data) ? data.map(mark) : mark(data);
   },
   async recentCommits() {
     return [];
@@ -35,7 +44,9 @@ const demoSource = {
 function loadSavedOrders() {
   try {
     const saved = JSON.parse(window.localStorage.getItem(ORDERS_KEY) || "null");
-    return saved && saved.ops && saved.files ? saved : { ops: {}, files: {} };
+    if (!saved?.ops || !saved?.files) return { ops: {}, files: {} };
+    for (const op of Object.values(saved.ops)) op.patches ||= {};
+    return saved;
   } catch {
     return { ops: {}, files: {} };
   }
@@ -44,7 +55,7 @@ function loadSavedOrders() {
 export function CommandProvider({ github, demo, children }) {
   const source = demo ? demoSource : github;
   const [bases, setBases] = useState({}); // collection key -> rows as on GitHub
-  const [orders, setOrders] = useState(loadSavedOrders); // { ops: {key: {upserts, deletes}}, files: {path: {...}} }
+  const [orders, setOrders] = useState(loadSavedOrders); // { ops: {key: op}, files: {path: {...}} }
   const [dispatch, setDispatch] = useState(null); // { sha, at, status }
   const [ordersSaveFailed, setOrdersSaveFailed] = useState(false);
   const detailCache = useRef({});
@@ -90,7 +101,9 @@ export function CommandProvider({ github, demo, children }) {
       for (const r of base) {
         seen.add(r.id);
         if (op.deletes.includes(r.id)) continue;
-        rows.push(op.upserts[r.id] ? toRow(op.upserts[r.id]) : r);
+        if (op.upserts[r.id]) rows.push(toRow(op.upserts[r.id]));
+        else if (op.patches[r.id]) rows.push({ ...r, ...op.patches[r.id] });
+        else rows.push(r);
       }
       for (const [id, rec] of Object.entries(op.upserts)) if (!seen.has(id)) rows.push(toRow(rec));
       return rows;
@@ -98,31 +111,40 @@ export function CommandProvider({ github, demo, children }) {
     [bases, orders]
   );
 
-  // Full record (with body text for long-form collections).
+  const readDetail = useCallback(
+    (col, id) => {
+      const path = `${col.detailDir}/${id}.json`;
+      if (!detailCache.current[path]) detailCache.current[path] = source.readJson(path);
+      return detailCache.current[path];
+    },
+    [source]
+  );
+
+  // Full record (with detail fields for long-form collections).
   const getRecord = useCallback(
     async (key, id) => {
       const col = collectionByKey(key);
-      const pending = orders.ops[key]?.upserts[id];
-      if (pending) return structuredClone(pending);
-      if (col.detailDir) {
-        const path = `${col.detailDir}/${id}.json`;
-        if (!detailCache.current[path]) detailCache.current[path] = source.readJson(path);
-        const rec = await detailCache.current[path];
-        if (rec) return structuredClone(rec);
-      }
+      const op = orders.ops[key];
+      if (op?.upserts[id]) return structuredClone(op.upserts[id]);
+      let rec = null;
       const rows = bases[key] || (await loadCollection(key));
       const row = rows.find((r) => r.id === id);
-      return row ? structuredClone(row) : null;
+      if (col.detailDir) {
+        const detail = await readDetail(col, id);
+        rec = detail ? { ...row, ...detail } : row;
+      } else rec = row;
+      if (!rec) return null;
+      return structuredClone({ ...rec, ...(op?.patches[id] || {}) });
     },
-    [bases, orders, source, loadCollection]
+    [bases, orders, loadCollection, readDetail]
   );
 
   const updateOps = (key, fn) =>
     setOrders((o) => {
-      const current = o.ops[key] || { upserts: {}, deletes: [] };
-      const next = fn({ upserts: { ...current.upserts }, deletes: [...current.deletes] });
+      const current = o.ops[key] || emptyOp();
+      const next = fn({ upserts: { ...current.upserts }, patches: { ...current.patches }, deletes: [...current.deletes] });
       const ops = { ...o.ops };
-      if (!Object.keys(next.upserts).length && !next.deletes.length) delete ops[key];
+      if (isEmptyOp(next)) delete ops[key];
       else ops[key] = next;
       return { ...o, ops };
     });
@@ -132,10 +154,22 @@ export function CommandProvider({ github, demo, children }) {
     const rec = cleanRecord({ ...record, id: record.id || newId(), created_date: record.created_date || now, updated_date: now });
     updateOps(key, (op) => {
       op.upserts[rec.id] = rec;
+      delete op.patches[rec.id];
       op.deletes = op.deletes.filter((id) => id !== rec.id);
       return op;
     });
     return rec.id;
+  }, []);
+
+  // Change a few fields on many records without opening them (bulk publish/hide).
+  const patchRecords = useCallback((key, ids, patch) => {
+    updateOps(key, (op) => {
+      for (const id of ids) {
+        if (op.upserts[id]) op.upserts[id] = { ...op.upserts[id], ...patch };
+        else op.patches[id] = { ...(op.patches[id] || {}), ...patch };
+      }
+      return op;
+    });
   }, []);
 
   const deleteRecord = useCallback(
@@ -143,6 +177,7 @@ export function CommandProvider({ github, demo, children }) {
       const inBase = (bases[key] || []).some((r) => r.id === id);
       updateOps(key, (op) => {
         delete op.upserts[id];
+        delete op.patches[id];
         if (inBase && !op.deletes.includes(id)) op.deletes.push(id);
         return op;
       });
@@ -153,12 +188,13 @@ export function CommandProvider({ github, demo, children }) {
   const revertRecord = useCallback((key, id) => {
     updateOps(key, (op) => {
       delete op.upserts[id];
+      delete op.patches[id];
       op.deletes = op.deletes.filter((d) => d !== id);
       return op;
     });
   }, []);
 
-  // Bulk import: records with a known id update it, the rest are added.
+  // Bulk import: records with a known id update it, the rest are added (hidden).
   const importRecords = useCallback(
     (key, records) => {
       const known = new Set((bases[key] || []).map((r) => r.id));
@@ -167,8 +203,10 @@ export function CommandProvider({ github, demo, children }) {
       updateOps(key, (op) => {
         for (const raw of records) {
           const isKnown = raw.id && known.has(raw.id);
-          const rec = cleanRecord({ ...raw, id: isKnown ? raw.id : newId(), created_date: raw.created_date || now, updated_date: now });
+          const published = raw.published === true || raw.published === "true";
+          const rec = cleanRecord({ ...raw, published, id: isKnown ? raw.id : newId(), created_date: raw.created_date || now, updated_date: now });
           op.upserts[rec.id] = rec;
+          delete op.patches[rec.id];
           isKnown ? updated++ : added++;
         }
         return op;
@@ -204,14 +242,17 @@ export function CommandProvider({ github, demo, children }) {
     const lines = [];
     for (const [key, op] of Object.entries(orders.ops)) {
       const col = collectionByKey(key);
-      const base = new Set((bases[key] || []).map((r) => r.id));
+      const base = bases[key] || [];
+      const baseIds = new Set(base.map((r) => r.id));
+      const titleOf = (id, rec) => col.title(rec || base.find((r) => r.id === id) || {}) || id;
       for (const rec of Object.values(op.upserts)) {
-        lines.push({ kind: base.has(rec.id) ? "edit" : "add", key, id: rec.id, label: `${col.en}: ${col.title(rec) || rec.id}` });
+        lines.push({ kind: baseIds.has(rec.id) ? "edit" : "add", key, id: rec.id, label: `${col.en}: ${titleOf(rec.id, rec)}` });
       }
-      for (const id of op.deletes) {
-        const row = (bases[key] || []).find((r) => r.id === id);
-        lines.push({ kind: "delete", key, id, label: `${col.en}: ${row ? col.title(row) : id}` });
+      for (const [id, patch] of Object.entries(op.patches)) {
+        const what = "published" in patch ? (patch.published ? "put online" : "hidden") : "updated";
+        lines.push({ kind: patch.published === false ? "hide" : patch.published ? "publish" : "edit", key, id, label: `${col.en}: ${titleOf(id)} — ${what}` });
       }
+      for (const id of op.deletes) lines.push({ kind: "delete", key, id, label: `${col.en}: ${titleOf(id)}` });
     }
     for (const [path, f] of Object.entries(orders.files)) lines.push({ kind: f.base64 != null ? "upload" : "settings", path, label: f.note || path });
     return lines;
@@ -232,7 +273,7 @@ export function CommandProvider({ github, demo, children }) {
           return;
         }
       } catch {
-        // not reachable from here (e.g. local preview) — keep waiting
+        // keep waiting
       }
       if (Date.now() - started > 8 * 60 * 1000) {
         setDispatch((d) => (d?.sha === sha ? { ...d, status: "slow" } : d));
@@ -255,17 +296,27 @@ export function CommandProvider({ github, demo, children }) {
         const toRow = (r) => (col.detailDir ? indexRow(col, r) : r);
         const rows = latest
           .filter((r) => !op.deletes.includes(r.id))
-          .map((r) => (op.upserts[r.id] ? toRow(op.upserts[r.id]) : r));
+          .map((r) => (op.upserts[r.id] ? toRow(op.upserts[r.id]) : op.patches[r.id] ? { ...r, ...op.patches[r.id] } : r));
         for (const [id, rec] of Object.entries(op.upserts)) if (!latestIds.has(id)) rows.push(toRow(rec));
         changes.push({ path: col.file, content: serializeRows(rows) });
+
         if (col.detailDir) {
           for (const rec of Object.values(op.upserts)) changes.push({ path: `${col.detailDir}/${rec.id}.json`, content: JSON.stringify(rec) });
+          for (const [id, patch] of Object.entries(op.patches)) {
+            if (!latestIds.has(id)) continue;
+            const detail = await github.readJson(`${col.detailDir}/${id}.json`);
+            if (detail) changes.push({ path: `${col.detailDir}/${id}.json`, content: JSON.stringify({ ...detail, ...patch }) });
+          }
           for (const id of op.deletes) if (latestIds.has(id)) changes.push({ path: `${col.detailDir}/${id}.json`, delete: true });
         }
+
         const adds = Object.keys(op.upserts).filter((id) => !latestIds.has(id)).length;
         const edits = Object.keys(op.upserts).length - adds;
+        const patched = Object.values(op.patches);
+        const online = patched.filter((p) => p.published === true).length;
+        const hidden = patched.filter((p) => p.published === false).length;
         summary.push(
-          [adds && `${adds} added`, edits && `${edits} edited`, op.deletes.length && `${op.deletes.length} removed`]
+          [adds && `${adds} added`, edits && `${edits} edited`, online && `${online} put online`, hidden && `${hidden} hidden`, op.deletes.length && `${op.deletes.length} removed`]
             .filter(Boolean)
             .map((s) => `${col.en}: ${s}`)
             .join(", ")
@@ -301,6 +352,7 @@ export function CommandProvider({ github, demo, children }) {
     rowsFor,
     getRecord,
     saveRecord,
+    patchRecords,
     deleteRecord,
     revertRecord,
     importRecords,

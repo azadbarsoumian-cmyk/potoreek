@@ -5,6 +5,7 @@ import { useLanguage } from "@/lib/LanguageContext";
 
 const NAV = [
 { am: "Պատմութիւններ", en: "Stories", to: "/stories" },
+{ am: "Ֆէտայիներ", en: "Fedayi", to: "/fidayis" },
 { am: "Քարտէս", en: "Map", to: "/map" },
 { am: "Բանաստեղծութիւններ", en: "Poems", to: "/poems" },
 { am: "Քաղվածքներ", en: "Quotes", to: "/quotes" },

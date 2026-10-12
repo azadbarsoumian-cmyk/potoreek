@@ -19,9 +19,27 @@ import NotFound from '@/pages/NotFound';
 
 // The map page pulls in Leaflet, so it loads only when visited.
 const ArchiveMap = lazy(() => import('@/pages/ArchiveMap'));
+// The Command Center is its own app, loaded only at /admin.
+const AdminApp = lazy(() => import('@/admin/AdminApp'));
+
+const isAdminPath = () => window.location.pathname === '/admin' || window.location.pathname.startsWith('/admin/');
 
 function App() {
-  const [comingSoon] = useState(showComingSoon);
+  const [admin] = useState(isAdminPath);
+  const [comingSoon] = useState(() => !admin && showComingSoon());
+
+  // The Command Center stays reachable while the public site is in coming-soon mode.
+  if (admin) {
+    return (
+      <Router>
+        <Suspense fallback={<div className="min-h-screen bg-[#140e0b]" />}>
+          <Routes>
+            <Route path="/admin/*" element={<AdminApp />} />
+          </Routes>
+        </Suspense>
+      </Router>
+    );
+  }
   if (comingSoon) return <ComingSoon />;
 
   return (

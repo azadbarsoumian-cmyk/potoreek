@@ -1,0 +1,15 @@
+{
+  "underConstruction": true,
+  "introFilm": true,
+  "comingSoon": {
+    "titleAm": "Կայքը շուտով",
+    "titleEn": "Site coming soon"
+  },
+  "socialLinks": [
+    { "label": "Patreon", "href": "https://www.patreon.com/potoreek" },
+    { "label": "Instagram", "href": "https://www.instagram.com/potoreek" },
+    { "label": "YouTube", "href": "https://www.youtube.com/@potoreek" },
+    { "label": "TikTok", "href": "https://www.tiktok.com/@potoreek" },
+    { "label": "Facebook", "href": "https://www.facebook.com/potoreek" }
+  ]
+}

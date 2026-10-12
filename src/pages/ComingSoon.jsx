@@ -2,23 +2,18 @@ import React, { useState } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 import { submitForm } from "@/lib/forms";
 import { pickVideo } from "@/lib/video";
+import site from "@/config/site.json";
 
 // Under-construction landing page: the Potoreek film on loop, a launch
-// sign-up and the social links. Shown to everyone while UNDER_CONSTRUCTION
-// is on (see src/lib/siteMode.js).
+// sign-up and the social links. Shown to everyone while `underConstruction`
+// is on in src/config/site.json (editable from the Command Center).
 const FILM = {
   hd: "/video/potoreek-1080.mp4",
   sd: "/video/potoreek-720.mp4",
   poster: "/video/potoreek-poster.jpg",
 };
 
-const LINKS = [
-  { label: "Patreon", href: "https://www.patreon.com/potoreek" },
-  { label: "Instagram", href: "https://www.instagram.com/potoreek" },
-  { label: "YouTube", href: "https://www.youtube.com/@potoreek" },
-  { label: "TikTok", href: "https://www.tiktok.com/@potoreek" },
-  { label: "Facebook", href: "https://www.facebook.com/potoreek" },
-];
+const LINKS = site.socialLinks;
 
 export default function ComingSoon() {
   const [src] = useState(() => pickVideo(FILM));
@@ -77,8 +72,8 @@ export default function ComingSoon() {
       <footer className="shrink-0 border-t border-white/10 bg-[#0d0b0b] px-5 py-5">
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-8">
           <div className="text-center lg:text-left">
-            <p className="font-heading font-bold text-lg leading-tight">Կայքը շուտով</p>
-            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-brass mt-1">Site coming soon</p>
+            <p className="font-heading font-bold text-lg leading-tight">{site.comingSoon.titleAm}</p>
+            <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-brass mt-1">{site.comingSoon.titleEn}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="flex-1 flex flex-col sm:flex-row gap-2 lg:max-w-xl lg:mx-auto w-full">

@@ -1,6 +1,9 @@
-// While the archive is being finished, every visitor sees the coming-soon
-// page. Set UNDER_CONSTRUCTION to false to launch the full site.
-export const UNDER_CONSTRUCTION = true;
+// Site-wide switches live in src/config/site.json, which the Command Center
+// (/admin) edits. While `underConstruction` is on, every visitor sees the
+// coming-soon page.
+import site from "@/config/site.json";
+
+export const UNDER_CONSTRUCTION = site.underConstruction;
 
 // Preview the full site while it's hidden: open any page with ?preview=on
 // (this browser remembers it), and ?preview=off to see the landing page again.

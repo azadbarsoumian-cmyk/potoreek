@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+
+/* Command Center: a revolutionary headquarters at night — dark wood desk,
+   aged paper dossiers, brass fittings, typewriter, red stamps and wax. */
+.cc-root {
+  --wood: #140e0b;
+  --paper: #ece2cc;
+  --paper-2: #e2d5b8;
+  --ink: #1d1712;
+  --ink-soft: #5b4b3b;
+  --red: #a3161f;
+  --red-bright: #c1272d;
+  --brass: #b08d57;
+  --brass-light: #dcc28c;
+  min-height: 100vh;
+  color: var(--paper);
+  background-color: var(--wood);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(220, 194, 140, 0.13), transparent 70%),
+    repeating-linear-gradient(92deg, rgba(255, 255, 255, 0.018) 0 2px, transparent 2px 11px),
+    repeating-linear-gradient(88deg, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 23px),
+    linear-gradient(180deg, #1d130e, #0d0806);
+  font-family: 'Noto Sans Armenian', ui-sans-serif, system-ui, sans-serif;
+}
+
+.cc-type {
+  font-family: 'Special Elite', 'Noto Sans Armenian', ui-monospace, monospace;
+}
+
+/* Brass nameplate */
+.cc-plate {
+  background: linear-gradient(180deg, #e2c992 0%, #b48e52 48%, #8a6a37 52%, #a98547 100%);
+  color: #2a1c0d;
+  border: 1px solid #5d4321;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 0 rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 0 rgba(255, 240, 210, 0.45);
+}
+.cc-plate .cc-rivet {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 35%, #f3e0b0, #6e5228 70%);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+/* Aged paper */
+.cc-paper {
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(ellipse at 15% 10%, rgba(120, 80, 30, 0.10), transparent 40%),
+    radial-gradient(ellipse at 90% 85%, rgba(110, 70, 25, 0.12), transparent 45%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.35  0 0 0 0 0.25  0 0 0 0 0.12  0 0 0 0.10 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 12px 30px rgba(0, 0, 0, 0.55);
+}
+.cc-paper-2 {
+  background-color: var(--paper-2);
+}
+.cc-rule {
+  border-color: rgba(29, 23, 18, 0.22);
+}
+
+/* Rubber stamp */
+.cc-stamp {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 3px double currentColor;
+  color: var(--red);
+  font-family: 'Special Elite', ui-monospace, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 11px;
+  transform: rotate(-4deg);
+  opacity: 0.88;
+  mix-blend-mode: multiply;
+}
+.cc-stamp-ink {
+  color: #2d3a5a;
+}
+.cc-stamp-green {
+  color: #2f5a32;
+}
+
+/* Wax seal */
+.cc-seal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  color: #f6d6cf;
+  font-family: 'Noto Serif Armenian', Georgia, serif;
+  font-weight: 700;
+  background: radial-gradient(circle at 38% 32%, #d4434a, #8f1118 62%, #5e0a0f);
+  box-shadow: inset 0 0 0 4px rgba(0, 0, 0, 0.18), inset 0 0 0 7px rgba(255, 255, 255, 0.08), 0 3px 8px rgba(0, 0, 0, 0.55);
+}
+
+/* Filing-cabinet labels (room navigation) */
+.cc-tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 8px 12px;
+  color: #e7dcc4;
+  border: 1px solid rgba(176, 141, 87, 0.28);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.15));
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+.cc-tab:hover {
+  border-color: rgba(220, 194, 140, 0.6);
+  color: #fff7e6;
+}
+.cc-tab[aria-current='page'] {
+  color: var(--ink);
+  background: var(--paper);
+  border-color: var(--brass);
+  box-shadow: inset 4px 0 0 var(--red-bright);
+}
+
+/* Inputs typed onto paper */
+.cc-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  color: var(--ink);
+  background: #f7f0de;
+  border: 1px solid rgba(29, 23, 18, 0.35);
+  border-radius: 0;
+}
+.cc-input.cc-input-icon {
+  padding-left: 36px;
+}
+.cc-input:focus {
+  outline: 2px solid var(--red-bright);
+  outline-offset: 1px;
+}
+textarea.cc-input {
+  line-height: 1.55;
+}
+.cc-label {
+  display: block;
+  margin-bottom: 4px;
+  font-family: 'Special Elite', 'Noto Sans Armenian', ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* Buttons */
+.cc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  font-family: 'Special Elite', 'Noto Sans Armenian', ui-monospace, monospace;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: #f2e8d2;
+  border: 1px solid rgba(29, 23, 18, 0.45);
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+.cc-btn:hover {
+  background: #fff6e2;
+}
+.cc-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.cc-btn-red {
+  color: #fff4ee;
+  background: linear-gradient(180deg, #c1272d, #8f1118);
+  border-color: #5e0a0f;
+}
+.cc-btn-red:hover {
+  background: linear-gradient(180deg, #d2353b, #a3161f);
+}
+.cc-btn-dark {
+  color: #efe3c8;
+  background: rgba(0, 0, 0, 0.35);
+  border-color: rgba(220, 194, 140, 0.4);
+}
+.cc-btn-dark:hover {
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+}
+.cc-btn:focus-visible,
+.cc-tab:focus-visible,
+.cc-link:focus-visible {
+  outline: 2px solid var(--red-bright);
+  outline-offset: 2px;
+}
+.cc-link {
+  color: var(--red);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Telegraph tape */
+.cc-ticker {
+  overflow: hidden;
+  white-space: nowrap;
+  color: var(--brass-light);
+  background: linear-gradient(180deg, #0b0705, #160f0b);
+  border-top: 1px solid rgba(176, 141, 87, 0.35);
+}
+.cc-ticker-track {
+  display: inline-block;
+  padding-left: 100%;
+  animation: ccTicker 60s linear infinite;
+}
+@keyframes ccTicker {
+  to {
+    transform: translateX(-100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cc-ticker-track {
+    animation: none;
+    padding-left: 0;
+  }
+}
+
+/* Body text preview inside a dossier */
+.cc-preview h1, .cc-preview h2, .cc-preview h3 { font-weight: 700; margin: 0.8em 0 0.4em; }
+.cc-preview p { margin: 0.6em 0; }
+.cc-preview img { max-width: 100%; height: auto; }
+.cc-preview a { color: var(--red); text-decoration: underline; }

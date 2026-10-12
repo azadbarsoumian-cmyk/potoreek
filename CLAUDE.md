@@ -31,6 +31,25 @@ plain static site. React 18 + Vite + Tailwind 3, deployed on Netlify from GitHub
 - Soundtracks are muxed in with `-c:v copy` (landing: full length; intro: first
   9.6 s with a 0.8 s fade).
 
+## Command Center (/admin)
+
+- `src/admin/` — a separate app loaded only at `/admin` (reachable even in
+  coming-soon mode, `noindex`). Styled as a revolutionary headquarters
+  (`admin.css`: wood, aged paper, brass plate, typewriter, stamps, wax seal).
+- Sign-in: the owner's fine-grained GitHub token (repo `potoreek`, Contents:
+  read & write), kept in their browser only. "Look around without a key" is a
+  read-only demo that reads the live `/data` files.
+- Edits are queued as record-level "orders" (localStorage) and published by
+  one "dispatch" = one commit via the Git Data API (`github.js`). At dispatch the
+  latest files are re-read and the orders replayed, so concurrent commits are
+  kept. Netlify rebuilds; `dist/version.json` (commit stamp from `COMMIT_REF`)
+  lets the Command Center show when it is live.
+- Rooms: Situation, one per collection (`collections.js` defines fields), Media
+  (uploads to `public/images/uploads/`), Sign-ups (Netlify Forms; optional
+  Netlify token), Settings (`src/config/site.json`, `src/config/taxonomy.json`).
+- Index files are written one record per line (`format.js` `serializeRows`);
+  keep that format when editing them by hand or by script.
+
 ## How it fits together
 
 - Content lives in `public/data/` as JSON. `src/api/content.js` loads it and

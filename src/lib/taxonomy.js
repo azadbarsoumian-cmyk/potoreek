@@ -1,23 +1,6 @@
-export const ARCHIVE_CATEGORIES = [
-  { am: "Բանաստեղծութիւններ", en: "Poems" },
-  { am: "Դէպքեր", en: "Events" },
-  { am: "Ինքնակենսագրականներ", en: "Memoirs" },
-  { am: "Լուրեր", en: "News" },
-  { am: "Խմբագրականներ", en: "Editorials" },
-  { am: "Կենսագրականներ", en: "Biographies" },
-  { am: "Կռիւներ", en: "Battles" },
-  { am: "Ճառեր-Երգեր", en: "Speeches & songs" },
-  { am: "Յայտարարութիւններ", en: "Announcements" },
-  { am: "Յօդուածաշարներ", en: "Series" },
-  { am: "Յօդուածներ", en: "Articles" },
-  { am: "Տեռորներ", en: "Operations" },
-];
+// Category lists live in src/config/taxonomy.json so the Command Center can
+// edit them.
+import taxonomy from "@/config/taxonomy.json";
 
-export const QUOTE_SUBJECTS = [
-  { am: "Քաջութիւն", en: "Courage" },
-  { am: "Հայրենիք", en: "Homeland" },
-  { am: "Ազատութիւն", en: "Freedom" },
-  { am: "Յիշողութիւն", en: "Memory" },
-  { am: "Եղբայրութիւն", en: "Brotherhood" },
-  { am: "Հաւատք", en: "Faith" },
-];
+export const ARCHIVE_CATEGORIES = taxonomy.archiveCategories;
+export const QUOTE_SUBJECTS = taxonomy.quoteSubjects;

@@ -5,18 +5,21 @@ import { content } from "@/api/content";
 import { useLanguage } from "@/lib/LanguageContext";
 import { ARCHIVE_CATEGORIES } from "@/lib/taxonomy";
 import { pickVideo } from "@/lib/video";
+import site from "@/config/site.json";
 
 // Homepage intro, in two acts:
 // 1. The opening film (the Potoreek promo, cut before its Patreon card)
 //    plays and ends on the logo.
 // 2. The Փոթորիկ storm takes over from the logo, pulls the archive into a
 //    whirlwind, then lays every fragment down in its category.
-// Set INTRO_FILM to null to start straight from the storm.
-const INTRO_FILM = {
-  hd: "/video/intro-1080.mp4",
-  sd: "/video/intro-720.mp4", // phones and data-saver connections
-  poster: "/video/intro-poster.jpg",
-};
+// `introFilm` in src/config/site.json turns act 1 off (straight to the storm).
+const INTRO_FILM = site.introFilm
+  ? {
+      hd: "/video/intro-1080.mp4",
+      sd: "/video/intro-720.mp4", // phones and data-saver connections
+      poster: "/video/intro-poster.jpg",
+    }
+  : null;
 const HERO_POSTER = "/images/9d85d5882_generated_7226d19c.jpg";
 const FILM_START_TIMEOUT = 4000; // give up on the film if it hasn't started by then
 

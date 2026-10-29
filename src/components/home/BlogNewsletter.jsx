@@ -39,7 +39,7 @@ export default function BlogNewsletter() {
           {posts.map((p) => (
             <Link key={p.id} to={`/blog/${p.id}`} className="group flex items-baseline justify-between py-5 gap-4">
               <div>
-                <h3 className="font-heading font-bold text-xl group-hover:text-[#C1272D] transition-colors">{p.title}</h3>
+                <h3 className="font-heading font-bold text-xl group-hover:text-[var(--brand-red,#C1272D)] transition-colors">{p.title}</h3>
                 <p className="text-sm text-black/60 mt-1">{p.excerpt}</p>
               </div>
               <span className="text-xs text-black/40 shrink-0">{p.date}</span>
@@ -48,7 +48,7 @@ export default function BlogNewsletter() {
         </div>
       </section>
 
-      <section className="bg-[#C1272D] text-white py-16">
+      <section className="bg-[var(--brand-red,#C1272D)] text-white py-16">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
           <div>
             <h2 className="font-heading text-3xl font-bold">Պահենք յիշողութիւնը։</h2>

@@ -22,7 +22,7 @@ export default function StoriesPreview() {
           <h2 className="font-heading text-3xl md:text-4xl font-bold">Պատմութիւններ</h2>
           <p className="text-black/60 mt-2">{lang === "am" ? "Ապրողներ մեզի պատմած՝ մեր օրերու համար։" : "Stories from the archive, retold for today's readers."}</p>
         </div>
-        <Link to="/stories" className="text-sm uppercase tracking-widest underline hover:text-[#C1272D]">
+        <Link to="/stories" className="text-sm uppercase tracking-widest underline hover:text-[var(--brand-red,#C1272D)]">
           Բոլոր պատմութիւնները
         </Link>
       </div>
@@ -44,10 +44,10 @@ function StoryLine({ story }) {
   const { lang } = useLanguage();
   return (
     <Link to={`/stories/${story.id}`} className="group flex items-start gap-4">
-      <span className="font-heading text-xl font-bold text-[#C1272D] border border-black/20 px-2 py-1 text-center shrink-0">{story.year}</span>
+      <span className="font-heading text-xl font-bold text-[var(--brand-red,#C1272D)] border border-black/20 px-2 py-1 text-center shrink-0">{story.year}</span>
       <div>
         <p className="text-xs uppercase tracking-widest text-black/50">{lang === "am" ? story.category_am : story.category_en}</p>
-        <h3 className="font-heading font-bold text-lg group-hover:text-[#C1272D] transition-colors">
+        <h3 className="font-heading font-bold text-lg group-hover:text-[var(--brand-red,#C1272D)] transition-colors">
           {lang === "am" ? story.title_am : story.title_en}
         </h3>
         <p className="text-sm text-black/60 mt-1 line-clamp-2">{story.excerpt_en}</p>

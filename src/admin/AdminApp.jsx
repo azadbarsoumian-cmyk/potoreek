@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, Route, Routes, Link } from "react-router-dom";
-import { UserPlus, Users, Archive, BookOpen, Feather, Quote, ShoppingBag, Film, Newspaper, Image as ImageIcon, Mail, Settings as Cog, Radar, ExternalLink, LogOut, Stamp } from "lucide-react";
+import { Palette, UserPlus, Users, Archive, BookOpen, Feather, Quote, ShoppingBag, Film, Newspaper, Image as ImageIcon, Mail, Settings as Cog, Radar, ExternalLink, LogOut, Stamp } from "lucide-react";
 import "./admin.css";
 import { createGitHub } from "./github";
 import { CommandProvider, useCommand } from "./store";
@@ -13,6 +13,7 @@ import DispatchesRoom from "./DispatchesRoom";
 import SettingsRoom from "./SettingsRoom";
 import OrdersRoom from "./OrdersRoom";
 import TeamRoom from "./TeamRoom";
+import DesignRoom from "./DesignRoom";
 import { SITE_URL } from "./config";
 
 const TOKEN_KEY = "potoreek-cc-github";
@@ -91,6 +92,7 @@ const ROOMS = [
   { to: "/admin/c/news", icon: Newspaper, am: "Լուրեր", en: "News" },
   { to: "/admin/media", icon: ImageIcon, am: "Պատկերներ", en: "Media" },
   { to: "/admin/dispatches", icon: Mail, am: "Նամակներ", en: "Sign-ups" },
+  { to: "/admin/design", icon: Palette, am: "Ձեւաւորում", en: "Design" },
   { to: "/admin/team", icon: UserPlus, am: "Ընկերներ", en: "Admins" },
   { to: "/admin/settings", icon: Cog, am: "Կարգաւորումներ", en: "Settings" },
 ];
@@ -173,6 +175,7 @@ function Shell({ info, onSignOut }) {
             <Route path="dispatches" element={<DispatchesRoom />} />
             <Route path="settings" element={<SettingsRoom />} />
             <Route path="team" element={<TeamRoom />} />
+            <Route path="design" element={<DesignRoom />} />
             <Route path="orders" element={<OrdersRoom />} />
             <Route path="*" element={<Situation />} />
           </Routes>

@@ -19,14 +19,14 @@ export default function SectorPanel({ regions, selected, onSelect, labels }) {
           >
             <span
               className={`font-mono text-[11px] uppercase tracking-widest w-32 shrink-0 truncate ${
-                selected === r.key ? "text-[#C1272D]" : "text-white/70"
+                selected === r.key ? "text-[var(--brand-red,#C1272D)]" : "text-white/70"
               }`}
             >
               {r.label}
             </span>
             <span className="flex-1 h-1 bg-white/10">
               <span
-                className="block h-full bg-[#C1272D]"
+                className="block h-full bg-[var(--brand-red,#C1272D)]"
                 style={{ width: `${Math.max((r.count / max) * 100, r.count > 0 ? 3 : 0)}%` }}
               />
             </span>

@@ -38,7 +38,7 @@ export default function HoloViewer({ story, onClose }) {
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-white/60 hover:text-[#C1272D] transition-colors"
+            className="p-2 text-white/60 hover:text-[var(--brand-red,#C1272D)] transition-colors"
             aria-label={L("Փակել", "Close")}
           >
             <X className="w-5 h-5" />
@@ -57,7 +57,7 @@ export default function HoloViewer({ story, onClose }) {
           <Link
             to={`/stories/${story.id}`}
             onClick={onClose}
-            className="font-mono text-[10px] uppercase tracking-widest text-[#C1272D] hover:text-white transition-colors"
+            className="font-mono text-[10px] uppercase tracking-widest text-[var(--brand-red,#C1272D)] hover:text-white transition-colors"
           >
             {L("ԲԱՐՑ ԱՄԲՈՂՋ ԹՂԹԱՅԹԻՒՆԸ", "OPEN FULL FILE")}
           </Link>

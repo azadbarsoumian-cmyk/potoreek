@@ -98,7 +98,7 @@ export default function ComingSoon() {
                 <button
                   type="submit"
                   disabled={status === "sending"}
-                  className="h-11 px-5 whitespace-nowrap bg-[#C1272D] hover:bg-[#a11f24] text-white text-xs uppercase tracking-widest disabled:opacity-60"
+                  className="h-11 px-5 whitespace-nowrap bg-[var(--brand-red,#C1272D)] hover:bg-[#a11f24] text-white text-xs uppercase tracking-widest disabled:opacity-60"
                 >
                   {status === "sending" ? "…" : "Տեղեկացուցէք ինծի · Notify me"}
                 </button>

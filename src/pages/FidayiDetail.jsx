@@ -109,7 +109,7 @@ export default function FidayiDetail() {
                   aria-pressed={view === v.id}
                   onClick={() => setView(v.id)}
                   className={`h-11 px-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest border transition-colors ${
-                    view === v.id ? "bg-[#C1272D] border-[#C1272D] text-white" : "border-white/20 text-white/70 hover:border-[#C1272D]"
+                    view === v.id ? "bg-[var(--brand-red,#C1272D)] border-[var(--brand-red,#C1272D)] text-white" : "border-white/20 text-white/70 hover:border-[var(--brand-red,#C1272D)]"
                   }`}
                 >
                   {v.icon && <v.icon className="w-4 h-4" aria-hidden="true" />}
@@ -120,7 +120,7 @@ export default function FidayiDetail() {
           </div>
 
           <div>
-            <Link to="/fidayis" className="inline-flex items-center gap-2 text-sm uppercase tracking-widest text-white/60 hover:text-[#C1272D] min-h-[44px]">
+            <Link to="/fidayis" className="inline-flex items-center gap-2 text-sm uppercase tracking-widest text-white/60 hover:text-[var(--brand-red,#C1272D)] min-h-[44px]">
               <ArrowLeft className="w-4 h-4" aria-hidden="true" /> {L("Բոլոր ֆէտայիները", "All fedayi")}
             </Link>
             <p className="font-mono text-[11px] uppercase tracking-widest text-brass mt-4">
@@ -149,7 +149,7 @@ export default function FidayiDetail() {
             )}
             {bio &&
               (hasHtml(bio) ? (
-                <div className="mt-8 text-white/80 leading-relaxed text-lg [&_p]:my-3 [&_a]:text-[#C1272D]" dangerouslySetInnerHTML={{ __html: bio }} />
+                <div className="mt-8 text-white/80 leading-relaxed text-lg [&_p]:my-3 [&_a]:text-[var(--brand-red,#C1272D)]" dangerouslySetInnerHTML={{ __html: bio }} />
               ) : (
                 <p className="mt-8 text-white/80 leading-relaxed text-lg whitespace-pre-line">{bio}</p>
               ))}
@@ -161,11 +161,11 @@ export default function FidayiDetail() {
         {f.timeline?.length > 0 && (
           <section>
             <h2 className="font-heading text-3xl font-bold">{L("Ժամանակագրութիւն", "Timeline")}</h2>
-            <ol className="mt-6 border-l-2 border-[#C1272D] pl-6 space-y-5">
+            <ol className="mt-6 border-l-2 border-[var(--brand-red,#C1272D)] pl-6 space-y-5">
               {f.timeline.map((t, i) => (
                 <li key={i} className="relative">
-                  <span className="absolute -left-[33px] top-1.5 w-4 h-4 rounded-full bg-[#C1272D] border-4 border-[#F4F1EC]" aria-hidden="true" />
-                  <p className="font-mono text-sm text-[#C1272D] font-bold">{t.year}</p>
+                  <span className="absolute -left-[33px] top-1.5 w-4 h-4 rounded-full bg-[var(--brand-red,#C1272D)] border-4 border-[#F4F1EC]" aria-hidden="true" />
+                  <p className="font-mono text-sm text-[var(--brand-red,#C1272D)] font-bold">{t.year}</p>
                   <p className="text-black/80">{(lang === "am" ? t.text_am : t.text_en) || t.text_en || t.text_am}</p>
                 </li>
               ))}
@@ -222,7 +222,7 @@ export default function FidayiDetail() {
             <h2 className="font-heading text-3xl font-bold">{L("Խօսքեր", "In his own words")}</h2>
             <ul className="mt-6 grid md:grid-cols-2 gap-6">
               {quotes.map((q) => (
-                <li key={q.id} className="border-l-4 border-[#C1272D] pl-5">
+                <li key={q.id} className="border-l-4 border-[var(--brand-red,#C1272D)] pl-5">
                   <p className="font-heading text-xl leading-snug">«{q.text_am}»</p>
                   {q.text_en && <p className="mt-2 text-black/60 italic">{q.text_en}</p>}
                 </li>
@@ -237,7 +237,7 @@ export default function FidayiDetail() {
             <ul className="mt-6 space-y-4">
               {poems.map((p) => (
                 <li key={p.id}>
-                  <Link to="/poems" className="font-heading text-xl font-bold hover:text-[#C1272D]">
+                  <Link to="/poems" className="font-heading text-xl font-bold hover:text-[var(--brand-red,#C1272D)]">
                     {lang === "am" ? p.title_am : p.title_en}
                   </Link>
                   <p className="text-sm text-black/50">{lang === "am" ? p.author_am : p.author_en}</p>
@@ -277,7 +277,7 @@ export default function FidayiDetail() {
               {f.sources.map((s, i) => (
                 <li key={i}>
                   {s.url ? (
-                    <a href={s.url} target="_blank" rel="noreferrer" className="underline hover:text-[#C1272D]">
+                    <a href={s.url} target="_blank" rel="noreferrer" className="underline hover:text-[var(--brand-red,#C1272D)]">
                       {s.label || s.url}
                     </a>
                   ) : (

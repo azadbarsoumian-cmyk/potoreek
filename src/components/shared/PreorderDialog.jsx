@@ -43,10 +43,10 @@ export default function PreorderDialog({ open, onOpenChange, productTitle }) {
               onChange={(e) => setEmail(e.target.value)}
               className="bg-white"
             />
-            <Button type="submit" disabled={submitting} className="w-full bg-[#C1272D] hover:bg-[#a11f24]">
+            <Button type="submit" disabled={submitting} className="w-full bg-[var(--brand-red,#C1272D)] hover:bg-[#a11f24]">
               {submitting ? "Sending..." : "Notify me"}
             </Button>
-            {error && <p className="text-sm text-[#C1272D]">Something went wrong. Please try again.</p>}
+            {error && <p className="text-sm text-[var(--brand-red,#C1272D)]">Something went wrong. Please try again.</p>}
           </form>
         )}
       </DialogContent>

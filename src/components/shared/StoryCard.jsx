@@ -25,13 +25,13 @@ export default function StoryCard({ story, large = false, dark = false }) {
             {story.year}
           </span>
         </div>
-        <p className="mt-4 text-xs uppercase tracking-widest text-[#C1272D]">
+        <p className="mt-4 text-xs uppercase tracking-widest text-[var(--brand-red,#C1272D)]">
           {lang === "am" ? story.category_am : story.category_en}
         </p>
       </Link>
       <h3
         onClick={() => setHolo(true)}
-        className={`font-heading font-bold mt-1 cursor-pointer ${large ? "text-3xl" : "text-xl"} group-hover:text-[#C1272D] transition-colors ${dark ? "text-white" : ""}`}
+        className={`font-heading font-bold mt-1 cursor-pointer ${large ? "text-3xl" : "text-xl"} group-hover:text-[var(--brand-red,#C1272D)] transition-colors ${dark ? "text-white" : ""}`}
       >
         {lang === "am" ? story.title_am : story.title_en}
       </h3>

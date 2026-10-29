@@ -92,8 +92,8 @@ export default function ArchiveMap() {
         <div className="flex flex-wrap items-center justify-between gap-3 border border-white/15 bg-black/40 px-4 py-2.5">
           <div className="flex items-center gap-3">
             <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-[#C1272D] opacity-75 animate-ping" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-[#C1272D]" />
+              <span className="absolute inline-flex h-full w-full rounded-full bg-[var(--brand-red,#C1272D)] opacity-75 animate-ping" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--brand-red,#C1272D)]" />
             </span>
             <span className="font-mono text-[11px] uppercase tracking-widest text-brass">
               ՖԷՏԱՒԱՅԻ ԱՐԽԻՒ · COMMAND
@@ -160,8 +160,8 @@ export default function ArchiveMap() {
                 onClick={() => setDecade(null)}
                 className={`px-3 py-1.5 font-mono text-[11px] uppercase tracking-widest border transition-colors ${
                   !decade
-                    ? "bg-[#C1272D] text-white border-[#C1272D]"
-                    : "border-white/20 text-white/60 hover:border-[#C1272D] hover:text-[#C1272D]"
+                    ? "bg-[var(--brand-red,#C1272D)] text-white border-[var(--brand-red,#C1272D)]"
+                    : "border-white/20 text-white/60 hover:border-[var(--brand-red,#C1272D)] hover:text-[var(--brand-red,#C1272D)]"
                 }`}
               >
                 {L("ԲՈԼՈՐԸ", "ALL")}
@@ -172,8 +172,8 @@ export default function ArchiveMap() {
                   onClick={() => setDecade(decade === d ? null : d)}
                   className={`px-3 py-1.5 font-mono text-[11px] uppercase tracking-widest border transition-colors ${
                     decade === d
-                      ? "bg-[#C1272D] text-white border-[#C1272D]"
-                      : "border-white/20 text-white/60 hover:border-[#C1272D] hover:text-[#C1272D]"
+                      ? "bg-[var(--brand-red,#C1272D)] text-white border-[var(--brand-red,#C1272D)]"
+                      : "border-white/20 text-white/60 hover:border-[var(--brand-red,#C1272D)] hover:text-[var(--brand-red,#C1272D)]"
                   }`}
                 >
                   {d}s · {count}
@@ -210,7 +210,7 @@ export default function ArchiveMap() {
             <button
               onClick={handleLoadMore}
               disabled={loadingMore}
-              className="mt-10 w-full border border-white/20 py-3 font-mono text-xs uppercase tracking-widest text-white/70 hover:border-[#C1272D] hover:text-[#C1272D] transition-colors disabled:opacity-50"
+              className="mt-10 w-full border border-white/20 py-3 font-mono text-xs uppercase tracking-widest text-white/70 hover:border-[var(--brand-red,#C1272D)] hover:text-[var(--brand-red,#C1272D)] transition-colors disabled:opacity-50"
             >
               {loadingMore ? "Loading…" : L("ԱՒԵԼԻՆ · LOAD MORE", "LOAD MORE")}
             </button>

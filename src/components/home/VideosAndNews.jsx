@@ -49,12 +49,12 @@ export default function VideosAndNews() {
           <div className="mt-6 divide-y divide-white/15">
             {news.map((n) => (
               <div key={n.id} className="py-4">
-                <p className="text-xs uppercase tracking-widest text-[#C1272D]">{lang === "am" ? n.type_am : n.type_en} · {n.date}</p>
+                <p className="text-xs uppercase tracking-widest text-[var(--brand-red,#C1272D)]">{lang === "am" ? n.type_am : n.type_en} · {n.date}</p>
                 <p className="mt-1 font-medium">{n.title}</p>
               </div>
             ))}
           </div>
-          <Link to="/news" className="inline-block mt-4 text-sm uppercase tracking-widest underline hover:text-[#C1272D]">Բոլոր լուրերը</Link>
+          <Link to="/news" className="inline-block mt-4 text-sm uppercase tracking-widest underline hover:text-[var(--brand-red,#C1272D)]">Բոլոր լուրերը</Link>
         </div>
       </div>
     </section>

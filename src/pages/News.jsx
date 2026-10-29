@@ -17,7 +17,7 @@ export default function News() {
       <div className="divide-y divide-black/10 mt-10">
         {news && news.map((n) => (
           <div key={n.id} className="py-6">
-            <p className="text-xs uppercase tracking-widest text-[#C1272D]">{lang === "am" ? n.type_am : n.type_en} · {n.date}</p>
+            <p className="text-xs uppercase tracking-widest text-[var(--brand-red,#C1272D)]">{lang === "am" ? n.type_am : n.type_en} · {n.date}</p>
             <p className="mt-2 text-xl font-medium">{n.title}</p>
           </div>
         ))}

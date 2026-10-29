@@ -48,6 +48,12 @@ plain static site. React 18 + Vite + Tailwind 3, deployed on Netlify from GitHub
 - Rooms: Situation, one per collection (`collections.js` defines fields), Media
   (uploads to `public/images/uploads/`), Sign-ups (Netlify Forms; optional
   Netlify token), Settings (`src/config/site.json`, `src/config/taxonomy.json`).
+- Design room (`DesignRoom.jsx`): colours, fonts, corner radius, homepage section
+  order/visibility and top-menu order/visibility, saved to `src/config/design.json`
+  and applied by `src/lib/design.js` (CSS variables at startup, `arrange()` in
+  `Home.jsx` and `Header.jsx`). Live preview: the draft goes to localStorage and
+  the iframe loads the site with `?designPreview=1`. Brand red in pages is
+  `var(--brand-red,#C1272D)`.
 - Index files are written one record per line (`format.js` `serializeRows`);
   keep that format when editing them by hand or by script.
 - Online / hidden: every collection room filters by visibility and has bulk

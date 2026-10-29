@@ -18,7 +18,7 @@ export default function Poems() {
       <div className="grid md:grid-cols-2 gap-x-12 gap-y-10 mt-12">
         {poems && poems.map((p) => (
           <article key={p.id} className="border-t-2 border-black/10 pt-6">
-            <p className="text-xs uppercase tracking-widest text-[#C1272D]">{p.year}</p>
+            <p className="text-xs uppercase tracking-widest text-[var(--brand-red,#C1272D)]">{p.year}</p>
             <h2 className="font-heading text-2xl font-bold mt-1">{lang === "am" ? p.title_am : p.title_en}</h2>
             <p className="text-sm text-black/50 mt-1">{lang === "am" ? p.author_am : p.author_en}</p>
             <p className="mt-4 text-black/70 leading-relaxed">{lang === "am" ? (p.excerpt_am || p.excerpt_en) : p.excerpt_en}</p>

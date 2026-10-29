@@ -42,7 +42,7 @@ export default function Stories() {
         <button
           onClick={handleLoadMore}
           disabled={loadingMore}
-          className="mt-12 w-full border border-black/20 py-3 text-sm uppercase tracking-widest hover:border-[#C1272D] hover:text-[#C1272D] transition-colors disabled:opacity-50"
+          className="mt-12 w-full border border-black/20 py-3 text-sm uppercase tracking-widest hover:border-[var(--brand-red,#C1272D)] hover:text-[var(--brand-red,#C1272D)] transition-colors disabled:opacity-50"
         >
           {loadingMore ? "Loading..." : "Աւելին · Load more"}
         </button>

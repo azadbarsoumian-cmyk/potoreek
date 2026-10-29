@@ -39,7 +39,7 @@ export default function Blog() {
         {posts && posts.map((p) => (
           <Link key={p.id} to={`/blog/${p.id}`} className="group flex items-baseline justify-between py-6 gap-4">
             <div className="min-w-0">
-              <h3 className="font-heading font-bold text-2xl group-hover:text-[#C1272D] transition-colors break-words">{p.title}</h3>
+              <h3 className="font-heading font-bold text-2xl group-hover:text-[var(--brand-red,#C1272D)] transition-colors break-words">{p.title}</h3>
               <p className="text-black/60 mt-2 break-words">{p.excerpt}</p>
             </div>
             <span className="text-xs text-black/40 shrink-0">{p.date}</span>
@@ -50,7 +50,7 @@ export default function Blog() {
         <button
           onClick={handleLoadMore}
           disabled={loadingMore}
-          className="mt-10 w-full border border-black/20 py-3 text-sm uppercase tracking-widest hover:border-[#C1272D] hover:text-[#C1272D] transition-colors disabled:opacity-50"
+          className="mt-10 w-full border border-black/20 py-3 text-sm uppercase tracking-widest hover:border-[var(--brand-red,#C1272D)] hover:text-[var(--brand-red,#C1272D)] transition-colors disabled:opacity-50"
         >
           {loadingMore ? "Loading..." : "Աւելին · Load more"}
         </button>

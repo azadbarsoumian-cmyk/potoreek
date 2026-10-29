@@ -3,7 +3,7 @@ import { useLanguage } from "@/lib/LanguageContext";
 import PreorderDialog from "./PreorderDialog";
 
 const BADGE_BG = {
-  red: "bg-[#C1272D] text-white",
+  red: "bg-[var(--brand-red,#C1272D)] text-white",
   black: "bg-[#171717] text-white",
   cream: "bg-[#F4F1EC] text-black",
   grey: "bg-[#D9D7D2] text-black",
@@ -33,7 +33,7 @@ export default function ProductCard({ product }) {
           <span className="text-sm font-medium text-white">{product.price_label}</span>
           <button
             onClick={() => setOpen(true)}
-            className="text-xs uppercase tracking-widest bg-[#C1272D] text-white px-4 py-2 hover:bg-brass hover:text-black transition-colors"
+            className="text-xs uppercase tracking-widest bg-[var(--brand-red,#C1272D)] text-white px-4 py-2 hover:bg-brass hover:text-black transition-colors"
           >
             Գնել
           </button>

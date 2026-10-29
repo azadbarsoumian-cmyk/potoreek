@@ -75,7 +75,7 @@ export default function Fidayis() {
         <ul className="mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {shown.map((f) => (
             <li key={f.id}>
-              <Link to={`/fidayi/${f.slug}`} className="group block border border-white/10 bg-black/30 hover:border-[#C1272D] transition-colors">
+              <Link to={`/fidayi/${f.slug}`} className="group block border border-white/10 bg-black/30 hover:border-[var(--brand-red,#C1272D)] transition-colors">
                 <div className="aspect-[3/4] bg-black overflow-hidden">
                   {f.portrait_url ? (
                     <Image src={f.portrait_url} alt={f.name_en} fittingType="fill" className="w-full h-full grayscale group-hover:grayscale-0 transition duration-500" />
@@ -84,7 +84,7 @@ export default function Fidayis() {
                   )}
                 </div>
                 <div className="p-4">
-                  <p className="font-heading font-bold text-lg leading-tight group-hover:text-[#C1272D] transition-colors">{lang === "am" ? f.name_am : f.name_en}</p>
+                  <p className="font-heading font-bold text-lg leading-tight group-hover:text-[var(--brand-red,#C1272D)] transition-colors">{lang === "am" ? f.name_am : f.name_en}</p>
                   <p className="text-xs text-white/50 mt-1">{lang === "am" ? f.name_en : f.name_am}</p>
                   <p className="font-mono text-[11px] uppercase tracking-widest text-brass mt-2">
                     {[lifespan(f), f.region && regionLabel(f.region, lang)].filter(Boolean).join(" · ")}

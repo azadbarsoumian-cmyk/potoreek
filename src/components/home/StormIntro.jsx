@@ -288,7 +288,7 @@ export default function StormIntro() {
             ref={(el) => (debrisRefs.current[i] = el)}
             aria-hidden="true"
             className={`absolute left-1/2 top-1/2 font-mono text-xs md:text-sm tracking-widest pointer-events-none transition-opacity duration-700 ${
-              i % 3 === 0 ? "text-[#C1272D]" : "text-brass"
+              i % 3 === 0 ? "text-[var(--brand-red,#C1272D)]" : "text-brass"
             } ${phase === "storm" ? "opacity-80" : "opacity-0"}`}
           >
             {word}
@@ -298,7 +298,7 @@ export default function StormIntro() {
       <div className="relative z-10 max-w-6xl w-full mx-auto px-6 pt-14 pb-10 md:pt-20 flex-1 flex flex-col items-center text-center">
         <h1
           ref={logoRef}
-          className={`font-black text-[#C1272D] text-5xl sm:text-6xl md:text-8xl leading-none [font-family:'Braind_Street',_sans-serif] ${
+          className={`font-black text-[var(--brand-red,#C1272D)] text-5xl sm:text-6xl md:text-8xl leading-none [font-family:'Braind_Street',_sans-serif] ${
             phase === "storm" ? "storm-logo" : ""
           }`}
         >
@@ -315,7 +315,7 @@ export default function StormIntro() {
               key={c.en}
               ref={(el) => (tileRefs.current[i] = el)}
               to={c.en === "Poems" ? "/poems" : `/stories?category=${encodeURIComponent(c.en)}`}
-              className={`group relative h-24 md:h-28 overflow-hidden border border-white/15 bg-black/50 text-left transition-[opacity,border-color] duration-700 hover:border-[#C1272D] focus-visible:border-[#C1272D] ${
+              className={`group relative h-24 md:h-28 overflow-hidden border border-white/15 bg-black/50 text-left transition-[opacity,border-color] duration-700 hover:border-[var(--brand-red,#C1272D)] focus-visible:border-[var(--brand-red,#C1272D)] ${
                 phase === "calm" || phase === "film" ? "opacity-0" : "opacity-100"
               }`}
             >
@@ -328,7 +328,7 @@ export default function StormIntro() {
               )}
               <span className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
               <span className="relative h-full flex flex-col justify-end p-3">
-                <span className="font-heading font-bold text-[13px] sm:text-sm md:text-base leading-tight [overflow-wrap:anywhere] group-hover:text-[#C1272D] transition-colors">
+                <span className="font-heading font-bold text-[13px] sm:text-sm md:text-base leading-tight [overflow-wrap:anywhere] group-hover:text-[var(--brand-red,#C1272D)] transition-colors">
                   {lang === "am" ? c.am : c.en}
                 </span>
                 <span className="mt-1 flex items-baseline justify-between gap-2 text-[10px] md:text-xs uppercase tracking-widest text-white/50">
@@ -341,7 +341,7 @@ export default function StormIntro() {
         </nav>
 
         <div className={`mt-8 flex flex-wrap justify-center gap-3 transition-opacity duration-700 ${animating && phase !== "order" ? "opacity-0" : "opacity-100"}`}>
-          <Link to="/stories" className="bg-[#C1272D] text-white px-6 py-3 text-sm uppercase tracking-widest hover:bg-brass hover:text-black transition-colors">
+          <Link to="/stories" className="bg-[var(--brand-red,#C1272D)] text-white px-6 py-3 text-sm uppercase tracking-widest hover:bg-brass hover:text-black transition-colors">
             Կարդալ պատմութիւնները
           </Link>
           <Link to="/map" className="border border-white/30 text-white px-6 py-3 text-sm uppercase tracking-widest hover:border-brass hover:text-brass transition-colors">

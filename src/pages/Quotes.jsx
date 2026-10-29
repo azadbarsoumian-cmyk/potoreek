@@ -59,7 +59,7 @@ export default function Quotes() {
             <figcaption className="mt-4 text-sm text-black/50">
               — {lang === "am" ? q.author_am : q.author_en}
             </figcaption>
-            <span className="inline-block mt-3 text-xs uppercase tracking-widest text-[#C1272D]">
+            <span className="inline-block mt-3 text-xs uppercase tracking-widest text-[var(--brand-red,#C1272D)]">
               {lang === "am" ? q.subject_am : q.subject_en}
             </span>
           </figure>

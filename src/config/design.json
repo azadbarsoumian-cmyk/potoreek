@@ -1,0 +1,33 @@
+{
+  "colors": {
+    "primary": "#bf2732",
+    "background": "#f3efe7",
+    "foreground": "#171717",
+    "muted": "#ddd6cc",
+    "vitrine": "#151312",
+    "brass": "#a98c5d"
+  },
+  "fonts": {
+    "heading": "Noto Serif Armenian",
+    "body": "Noto Sans Armenian"
+  },
+  "radius": 4,
+  "homeSections": [
+    { "key": "intro", "visible": true },
+    { "key": "stories", "visible": true },
+    { "key": "videosNews", "visible": true },
+    { "key": "shop", "visible": true },
+    { "key": "blogNewsletter", "visible": true }
+  ],
+  "nav": [
+    { "to": "/stories", "visible": true },
+    { "to": "/fidayis", "visible": true },
+    { "to": "/map", "visible": true },
+    { "to": "/poems", "visible": true },
+    { "to": "/quotes", "visible": true },
+    { "to": "/videos", "visible": true },
+    { "to": "/news", "visible": true },
+    { "to": "/blog", "visible": true },
+    { "to": "/shop", "visible": true }
+  ]
+}

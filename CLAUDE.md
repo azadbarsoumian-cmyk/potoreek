@@ -40,6 +40,9 @@ plain static site. React 18 + Vite + Tailwind 3, deployed on Netlify from GitHub
 - Sign-in: the owner's fine-grained GitHub token (repo `potoreek`, Contents:
   read & write), kept in their browser only. "Look around without a key" is a
   read-only demo that reads the live `/data` files.
+- Simple sign-in: name + password via `netlify/functions/admin-api.mjs` (`/api/admin`),
+  which holds the GitHub key server-side and allows only this repo's contents, commits
+  and git APIs. Env vars: `POTOREEK_GITHUB_TOKEN`, `POTOREEK_ADMINS` (`name:password,...`).
 - Edits are queued as record-level "orders" (localStorage) and published by
   one "dispatch" = one commit via the Git Data API (`github.js`). At dispatch the
   latest files are re-read and the orders replayed, so concurrent commits are

@@ -13,11 +13,27 @@ export class GitHubError extends Error {
 
 const encodePath = (path) => path.split("/").map(encodeURIComponent).join("/");
 
+export async function passwordLogin(name, password) {
+  const res = await fetch("/api/admin", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "login", name, password }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.message || "Sign-in is not available right now.");
+  return data.session;
+}
+
 export function createGitHub(token) {
   const repoPath = `/repos/${REPO.owner}/${REPO.name}`;
 
   async function request(path, { method = "GET", body, accept } = {}) {
-    const res = await fetch(API + path, {
+    // A password session ("pks.") goes through the site's server function, which holds the key.
+    const res = token.startsWith("pks.") ? await fetch("/api/admin", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ path, method, body, accept }),
+    }) : await fetch(API + path, {
       method,
       headers: {
         Authorization: `Bearer ${token}`,

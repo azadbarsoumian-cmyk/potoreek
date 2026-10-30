@@ -1,10 +1,23 @@
 import React, { useState } from "react";
 import { GITHUB_TOKEN_URL, REPO } from "./config";
+import { passwordLogin } from "./github";
 
 export default function Login({ onSignIn, onDemo }) {
   const [token, setToken] = useState("");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(true);
   const [status, setStatus] = useState({ busy: false, error: "" });
+
+  const submitPassword = async (e) => {
+    e.preventDefault();
+    setStatus({ busy: true, error: "" });
+    try {
+      await onSignIn(await passwordLogin(name.trim(), password), remember);
+    } catch (err) {
+      setStatus({ busy: false, error: err.message });
+    }
+  };
 
   const submit = async (e) => {
     e.preventDefault();
@@ -36,7 +49,36 @@ export default function Login({ onSignIn, onDemo }) {
           <span className="cc-stamp">Գաղտնի · Restricted</span>
         </div>
 
-        <form onSubmit={submit} className="mt-8 space-y-4">
+        <form onSubmit={submitPassword} className="mt-8 space-y-4">
+          <div>
+            <label htmlFor="cc-name" className="cc-label">
+              Անուն · Name
+            </label>
+            <input id="cc-name" autoComplete="username" spellCheck={false} className="cc-input" value={name} onChange={(e) => setName(e.target.value)} />
+          </div>
+          <div>
+            <label htmlFor="cc-password" className="cc-label">
+              Գաղտնաբառ · Password
+            </label>
+            <input id="cc-password" type="password" autoComplete="current-password" className="cc-input" value={password} onChange={(e) => setPassword(e.target.value)} />
+          </div>
+          <label className="flex items-center gap-3 text-sm min-h-[44px]">
+            <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="w-4 h-4 accent-[#a3161f]" />
+            Remember me on this device
+          </label>
+          {status.error && (
+            <p className="text-sm text-[#a3161f]" role="alert">
+              {status.error}
+            </p>
+          )}
+          <button type="submit" disabled={status.busy || !name.trim() || !password} className="cc-btn cc-btn-red w-full">
+            {status.busy ? "Checking credentials…" : "Մուտք · Enter headquarters"}
+          </button>
+        </form>
+
+        <details className="mt-6 text-sm text-[#3d3227]">
+          <summary className="cursor-pointer cc-type text-xs uppercase tracking-widest min-h-[44px] flex items-center">Sign in with a GitHub key instead</summary>
+        <form onSubmit={submit} className="mt-3 space-y-3">
           <div>
             <label htmlFor="cc-token" className="cc-label">
               GitHub access key
@@ -52,22 +94,10 @@ export default function Login({ onSignIn, onDemo }) {
               onChange={(e) => setToken(e.target.value)}
             />
           </div>
-          <label className="flex items-center gap-3 text-sm min-h-[44px]">
-            <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="w-4 h-4 accent-[#a3161f]" />
-            Remember me on this device
-          </label>
-          {status.error && (
-            <p className="text-sm text-[#a3161f]" role="alert">
-              {status.error}
-            </p>
-          )}
           <button type="submit" disabled={status.busy || !token.trim()} className="cc-btn cc-btn-red w-full">
             {status.busy ? "Checking credentials…" : "Մուտք · Enter headquarters"}
           </button>
         </form>
-
-        <details className="mt-6 text-sm text-[#3d3227]">
-          <summary className="cursor-pointer cc-type text-xs uppercase tracking-widest min-h-[44px] flex items-center">How to get a key</summary>
           <ol className="mt-2 list-decimal pl-5 space-y-1.5">
             <li>
               Open{" "}

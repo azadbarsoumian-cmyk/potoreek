@@ -63,6 +63,10 @@ export default function TeamRoom() {
         Invite someone by their GitHub username. They get full access: every room, publishing and dispatching. Anyone you invite can change or hide anything on the site, so only invite people you trust.
       </p>
 
+      <p className="mt-3 text-sm text-[#3d3227] max-w-2xl">
+        <b>Easiest way:</b> add them in Netlify → Project configuration → Environment variables → <code>POTOREEK_ADMINS</code> as <code>name:password</code> (comma between people), then redeploy. They sign in with just that name and password; no GitHub needed. The invitation below is only for people who use GitHub, and works only when you sign in with a GitHub key.
+      </p>
+
       {demo ? (
         <p className="mt-6 text-sm text-[#5b4b3b]">Sign in with your key to manage admins (the demo is read-only).</p>
       ) : (
